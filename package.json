@@ -1,0 +1,9 @@
+{
+  "name": "pk-product-scout",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm start",
+    "client": "cd frontend && npm run dev"
+  }
+}
