@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../api/api';
 import {
   User, MapPin, Phone, Save, CheckCircle2, Loader2,
   Sparkles, SlidersHorizontal
@@ -14,7 +14,7 @@ const CATEGORIES = [
 ];
 
 export default function Profile() {
-  const { user, login } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [form, setForm] = useState({ name: '', city: '', phone: '' });
   const [selectedPrefs, setSelectedPrefs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,10 +22,8 @@ export default function Profile() {
   const [saved, setSaved] = useState(false);
   const [interests, setInterests] = useState([]);
 
-  const config = { headers: { Authorization: `Bearer ${user.token}` } };
-
   useEffect(() => {
-    axios.get('http://localhost:5000/api/profile', config)
+    api.get('/api/profile')
       .then(({ data }) => {
         setForm({ name: data.name || '', city: data.city || '', phone: data.phone || '' });
         setSelectedPrefs(data.preferences || []);
@@ -45,10 +43,10 @@ export default function Profile() {
     setSaving(true);
     setSaved(false);
     try {
-      await axios.put('http://localhost:5000/api/profile', {
+      await api.put('/api/profile', {
         ...form,
         preferences: selectedPrefs,
-      }, config);
+      });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e) {

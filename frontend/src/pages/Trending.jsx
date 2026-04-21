@@ -1,25 +1,21 @@
-import { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import api from '../api/api';
 import {
   TrendingUp, Tag, Calendar, ExternalLink, Loader2,
   Flame, BadgePercent, RefreshCw, AlertCircle
 } from 'lucide-react';
 
 export default function Trending() {
-  const { user } = useContext(AuthContext);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  const config = { headers: { Authorization: `Bearer ${user.token}` } };
 
   const fetchTrending = async () => {
     setLoading(true);
     setError('');
     setData(null);
     try {
-      const { data: res } = await axios.get('http://localhost:5000/api/profile/trending', config);
+      const { data: res } = await api.get('/api/profile/trending');
       setData(res);
     } catch (e) {
       setError('Failed to load trending data. Please try again.');

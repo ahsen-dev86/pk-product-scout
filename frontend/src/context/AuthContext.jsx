@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/api';
 
 export const AuthContext = createContext();
 
@@ -8,28 +8,28 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userInfo = localStorage.getItem('userInfo');
-    if (userInfo) {
-      setUser(JSON.parse(userInfo));
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
     }
     setLoading(false);
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+    const { data } = await api.post('/api/auth/login', { email, password });
     setUser(data);
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    localStorage.setItem('user', JSON.stringify(data));
   };
 
   const register = async (email, password) => {
-    const { data } = await axios.post('http://localhost:5000/api/auth/register', { email, password });
+    const { data } = await api.post('/api/auth/register', { email, password });
     setUser(data);
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    localStorage.setItem('user', JSON.stringify(data));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('userInfo');
+    localStorage.removeItem('user');
   };
 
   return (

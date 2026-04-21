@@ -1,18 +1,14 @@
-import { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import api from '../api/api';
 import { Clock, ExternalLink, Search, AlertCircle } from 'lucide-react';
 
 export default function History() {
-  const { user } = useContext(AuthContext);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const config = { headers: { Authorization: `Bearer ${user.token}` } };
-
   useEffect(() => {
-    axios.get('http://localhost:5000/api/search/history', config)
+    api.get('/api/search/history')
       .then(({ data }) => setHistory(data))
       .catch(() => setError('Failed to load history.'))
       .finally(() => setLoading(false));

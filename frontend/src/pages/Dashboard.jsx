@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import api from '../api/api';
 import {
   Search, Loader2, ExternalLink, BadgeCheck, AlertCircle, Sparkles,
   ShieldCheck, ShieldAlert, Shield, CheckCircle2, Instagram, Facebook,
@@ -18,11 +19,9 @@ export default function Dashboard() {
   const [recs, setRecs] = useState(null);
   const [recsLoading, setRecsLoading] = useState(true);
 
-  const config = { headers: { Authorization: `Bearer ${user.token}` } };
-
   // Fetch personalized recs on mount
   useEffect(() => {
-    axios.get('http://localhost:5000/api/profile/recommendations', config)
+    api.get('/api/profile/recommendations')
       .then(({ data }) => setRecs(data))
       .catch(() => setRecs(null))
       .finally(() => setRecsLoading(false));
@@ -35,7 +34,7 @@ export default function Dashboard() {
     setError('');
     setResult(null);
     try {
-      const { data } = await axios.post('http://localhost:5000/api/search', { query }, config);
+      const { data } = await api.post('/api/search', { query });
       setResult(data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to search. Please try again.');
